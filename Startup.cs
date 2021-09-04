@@ -29,7 +29,12 @@ namespace MyForum
         public void ConfigureServices(IServiceCollection services)
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
+
+            //@Server=localhost;Port=1433;Database=MyForumDatabase;User=SA;Password=yourStrong(!)Password;
+         
             services.AddDbContext<MyForumContext>(options => options.UseSqlServer(connection));
+            
+            services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddControllers();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "MyForum", Version = "v1"}); });

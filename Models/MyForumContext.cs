@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace MyForum.Models
 {
@@ -12,8 +13,9 @@ namespace MyForum.Models
         public virtual DbSet<UserRoleMapping> UserRoleMappings { get; set; }
 
         public MyForumContext(DbContextOptions<MyForumContext> options)
+            :base(options)
         {
-            Database.EnsureCreated();
+            bool i = Database.EnsureCreated();
         }
     }
 }
