@@ -25,7 +25,8 @@ namespace MyForum.Controllers
         public async Task<ActionResult<IEnumerable<Chapter>>> GetChapters()
         {
             return await _context.Chapters
-                //.Include(s=>s.Subjects)
+                .Include(s=>s.Subjects)
+                .ThenInclude(m=>m.Messages)
                 .ToListAsync();
         }
 
@@ -33,7 +34,12 @@ namespace MyForum.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Chapter>> GetChapter(int id)
         {
-            var chapter = await _context.Chapters.FindAsync(id);
+            //var chapter = await _context.Chapters.FindAsync(id);
+            var chapter = await _context.Chapters
+                .Include(m=>m.Subjects)
+                .ThenInclude(s=>s.Messages)
+                .Where(s=>s.Id == id)
+                .FirstOrDefaultAsync();
 
             if (chapter == null)
             {

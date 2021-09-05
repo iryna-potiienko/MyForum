@@ -26,6 +26,7 @@ namespace MyForum.Controllers
         {
             return await _context.Subjects
                 //.Include(ch=>ch.Chapter)
+                .Include(m=>m.Messages)
                 .ToListAsync();
         }
 
@@ -33,7 +34,10 @@ namespace MyForum.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Subject>> GetSubject(int id)
         {
-            var subject = await _context.Subjects.FindAsync(id);
+            //var subject = await _context.Subjects.FindAsync(id);
+            var subject = await _context.Subjects
+                .Include(m=>m.Messages)
+                .Where(s=>s.Id == id).FirstOrDefaultAsync();
 
             if (subject == null)
             {
@@ -79,6 +83,9 @@ namespace MyForum.Controllers
         [HttpPost]
         public async Task<ActionResult<Subject>> PostSubject(Subject subject)
         {
+            //var chapter = await _context.Chapters.FindAsync(chapterId);
+            //subject.Chapter = chapter;
+            
             _context.Subjects.Add(subject);
             await _context.SaveChangesAsync();
 
